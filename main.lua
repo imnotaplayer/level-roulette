@@ -5,7 +5,7 @@ math.randomseed(time) -- for a random result
 local d = {}
 local list = {}
 
--- get the current list
+-- get the current active list
 local f = io.open("Remaining-List.txt", "rb")
 if f then
     for line in f:lines() do
@@ -23,9 +23,10 @@ else
         f:write("\n")
         f:close()
     else
-        print("Failed to created Remaining-List.txt")
+        print("Failed to create Remaining-List.txt")
     end
 end
+-- get the current saved list
 local f = io.open("The-List.txt", "rb")
 if f then
     for line in f:lines() do
@@ -42,7 +43,7 @@ else
         f:write("\n")
         f:close()
     else
-        print("Failed to created The-List.txt")
+        print("Failed to create The-List.txt")
     end
 end
 
@@ -80,7 +81,10 @@ while true do
         -- <d> is the active list that levels will be chosen from
         -- <list> is the list of levels that will be swapped to with the "swap" command
         if #d == 0 then
-            print("There are no levels left in The List.")
+            print("There are no levels left in the active list.")
+            if #list > 0 then
+                print('Type "swap" to swap your active list with your saved list')
+            end
         else
             local c = math.random(1, #d)
             local n = d[c]
@@ -101,9 +105,13 @@ while true do
         if #list == 0 then
             print("The List: (..empty..)")
         else
-            print("The List: "..s)
-            print("Remaining: "..table.concat(d))
+            print("The List: "..table.concat(list))
         end
+		if #d == 0 then
+			print("Remaining: (..none..)")
+		else
+            print("Remaining: "..table.concat(d))
+		end
     elseif i:sub(1, 4) == "add " then
         local level = i:sub(5, -1)
         local valid = true
@@ -123,9 +131,10 @@ while true do
         end
         if valid then
             table.insert(d, level)
-            print("Added "..level.." to current list.")
+            print("Added "..level.." to active list.")
             save()
         else
+            -- is this misleading?
             print("Level already accounted for.")
         end
     elseif i:sub(1, 7) == "remove " then
@@ -139,7 +148,7 @@ while true do
         end
         if valid then
             local level = table.remove(d, valid)
-            print("Removed "..level.." from current list.")
+            print("Removed "..level.." from active list.")
             save()
         else
             print("Level not in list.")
@@ -148,7 +157,7 @@ while true do
         d = list
         list = {}
         -- is this misleading?
-        print("Swapped list with saved list.")
+        print("Swapped active list with saved list.")
         -- save()
     elseif i == "exit" or i == "quit" then
         -- unlike breaking with CTRL+C, this will save before exiting,
