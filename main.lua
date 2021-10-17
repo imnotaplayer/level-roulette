@@ -105,13 +105,13 @@ while true do
         if #list == 0 then
             print("The List: (..empty..)")
         else
-            print("The List: "..table.concat(list))
+            print("The List: "..table.concat(list, ", "))
         end
-		if #d == 0 then
-			print("Remaining: (..none..)")
-		else
-            print("Remaining: "..table.concat(d))
-		end
+        if #d == 0 then
+            print("Remaining: (..none..)")
+        else
+            print("Remaining: "..table.concat(d, ", "))
+        end
     elseif i:sub(1, 4) == "add " then
         local level = i:sub(5, -1)
         local valid = true
